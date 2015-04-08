@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<script>
+    $(document).ready(function () {
+        $('#btnCapture').on("click", function () {
+            captureAndUpload();
+        });
+
+        $('#btnDisplay').on("click", function () {
+            captureAndDisplay();
+        });
+
+        function captureAndUpload() {
+            $('body').html2canvas({
+                onrendered: function (canvas) {
+                    //Set hidden field's value to image data (base-64 string)
+                    $('#capturedShot').val(canvas.toDataURL("image/png"));
+                    document.getElementById("form").submit();
+                }
+            });
+        }
+
+        function captureAndDisplay() {
+            $('body').html2canvas({
+                onrendered: function (canvas) {
+                    var myImage = canvas.toDataURL("image/png");
+                    window.open(myImage);
+                }
+            });
+        }
+    });
+</script>
+
+@using (Html.BeginForm("ScreenShot", "Home", FormMethod.Post, new { @id = "form" }))
+{
+    <div class="designPane">
+
+
+        <p>
+            Some text that would be captured as screenshot
+        </p>
+    </div>
+    <div class="space">
+    </div>
+    @Html.Hidden("capturedShot")
+    <div>
+        <input type="submit" id="btnCapture"  value="Capture" />
+        <input type="button" id="btnDisplay" value="View Image" />
+    </div>
+
+}
