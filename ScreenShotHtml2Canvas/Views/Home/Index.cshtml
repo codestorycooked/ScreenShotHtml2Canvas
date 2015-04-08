@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ScreenShotHtml2Canvas.Controllers.HomeController.ImageModel
+@{
     ViewBag.Title = "Home Page";
 }
 <script>
@@ -10,32 +11,33 @@
         $('#btnDisplay').on("click", function () {
             captureAndDisplay();
         });
-
+        var uploadedimage = '';
         function captureAndUpload() {
             $('body').html2canvas({
                 onrendered: function (canvas) {
-                    //Set hidden field's value to image data (base-64 string)
-                    $('#capturedShot').val(canvas.toDataURL("image/png"));
+                    var uploadedimage = canvas.toDataURL("image/png");
+                    $('#ImageData').val(uploadedimage);
                     document.getElementById("form").submit();
+
                 }
             });
+
         }
 
         function captureAndDisplay() {
             $('body').html2canvas({
                 onrendered: function (canvas) {
-                    var myImage = canvas.toDataURL("image/png");
-                    window.open(myImage);
+                    var uploadedimage = canvas.toDataURL("image/png");
+                    window.open(uploadedimage);
                 }
             });
+
         }
     });
 </script>
-
 @using (Html.BeginForm("ScreenShot", "Home", FormMethod.Post, new { @id = "form" }))
 {
     <div class="designPane">
-
 
         <p>
             Some text that would be captured as screenshot
@@ -43,9 +45,10 @@
     </div>
     <div class="space">
     </div>
-    @Html.Hidden("capturedShot")
+
+    @Html.HiddenFor(model => model.ImageData)
     <div>
-        <input type="submit" id="btnCapture"  value="Capture" />
+        <input type="button" id="btnCapture" value="Capture" />
         <input type="button" id="btnDisplay" value="View Image" />
     </div>
 

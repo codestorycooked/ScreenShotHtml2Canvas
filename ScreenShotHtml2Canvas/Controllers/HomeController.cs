@@ -12,11 +12,15 @@ namespace ScreenShotHtml2Canvas.Controllers
         {
             return View();
         }
-
-        [HttpPost]
-        public ActionResult ScreenShot(FormCollection formCollection)
+        public class ImageModel
         {
-            string screenShot = formCollection["capturedShot"];
+            public string ImageData { get; set; }
+        }
+        [HttpPost]
+        public ActionResult ScreenShot(ImageModel img)
+        {
+            //string screenShot = formCollection["capturedShot"];
+            string screenShot = img.ImageData;
             //remove the image header details
             string trimmedData = screenShot.Replace("data:image/png;base64,", "");
 
@@ -30,6 +34,6 @@ namespace ScreenShotHtml2Canvas.Controllers
             System.IO.File.WriteAllBytes(path, uploadedImage);
             return View("Index");
         }
-       
+
     }
 }
